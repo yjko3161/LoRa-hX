@@ -2,7 +2,7 @@
 
 # 가상환경 확인
 if [ ! -f "venv/bin/activate" ]; then
-    echo "[ERROR] 가상환경이 없습니다. setup.sh를 먼저 실행하세요."
+    echo "[ERROR] 가상환경이 없습니다. 먼저 실행하세요: bash setup.sh"
     exit 1
 fi
 source venv/bin/activate
