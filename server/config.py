@@ -4,7 +4,16 @@ config.yaml 파일에서 설정을 읽어 딕셔너리로 반환
 """
 
 import os
+import sys
 import yaml
+
+
+def _get_base_dir():
+    """PyInstaller exe / 일반 Python 모두 호환되는 기준 경로"""
+    if getattr(sys, "frozen", False):
+        # PyInstaller --onefile: exe가 있는 폴더
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
 
 _DEFAULT_CONFIG = {
     "lora": {
@@ -63,11 +72,16 @@ def load_config(config_path: str = None) -> dict:
         설정 딕셔너리
     """
     if config_path is None:
-        # 실행 파일 기준 / CWD 기준 탐색
+        base = _get_base_dir()
+        # PyInstaller 번들 내부 → exe 옆 → CWD 순으로 탐색
         candidates = [
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "config.yaml"),
+            os.path.join(base, "config.yaml"),
+            os.path.join(base, "..", "config.yaml"),
             os.path.join(os.getcwd(), "config.yaml"),
         ]
+        if getattr(sys, "frozen", False):
+            # --onefile: _MEIPASS 내부 번들 리소스
+            candidates.insert(0, os.path.join(sys._MEIPASS, "config.yaml"))
         for candidate in candidates:
             if os.path.isfile(candidate):
                 config_path = candidate

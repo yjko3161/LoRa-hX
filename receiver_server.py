@@ -9,7 +9,10 @@ import argparse
 import signal
 
 # 프로젝트 루트를 sys.path에 추가 (PyInstaller 빌드 호환)
-_root = os.path.dirname(os.path.abspath(__file__))
+if getattr(sys, "frozen", False):
+    _root = sys._MEIPASS
+else:
+    _root = os.path.dirname(os.path.abspath(__file__))
 if _root not in sys.path:
     sys.path.insert(0, _root)
 

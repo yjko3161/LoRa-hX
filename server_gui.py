@@ -18,8 +18,11 @@ from tkinter import ttk, scrolledtext, messagebox
 
 import serial.tools.list_ports
 
-# 프로젝트 루트
-_root = os.path.dirname(os.path.abspath(__file__))
+# 프로젝트 루트 (PyInstaller 호환)
+if getattr(sys, "frozen", False):
+    _root = sys._MEIPASS
+else:
+    _root = os.path.dirname(os.path.abspath(__file__))
 if _root not in sys.path:
     sys.path.insert(0, _root)
 
@@ -471,5 +474,13 @@ class ServerGUI:
 
 
 if __name__ == "__main__":
-    app = ServerGUI()
-    app.run()
+    try:
+        app = ServerGUI()
+        app.run()
+    except Exception as e:
+        # PyInstaller --windowed에서 에러 확인용
+        import traceback
+        err_path = os.path.join(os.path.dirname(sys.executable) if getattr(sys, "frozen", False) else ".", "error.log")
+        with open(err_path, "w", encoding="utf-8") as f:
+            traceback.print_exc(file=f)
+        raise

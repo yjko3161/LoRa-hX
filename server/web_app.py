@@ -5,6 +5,7 @@ FastAPI 웹 앱 + WebSocket 브로드캐스트
 import asyncio
 import json
 import os
+import sys
 from datetime import datetime
 from typing import Set
 
@@ -31,8 +32,11 @@ def create_app(db_manager: DatabaseManager) -> FastAPI:
     # REST API 라우트
     app.include_router(api_router)
 
-    # 정적 파일 서빙
-    static_dir = os.path.join(os.path.dirname(__file__), "static")
+    # 정적 파일 서빙 (PyInstaller 호환)
+    if getattr(sys, "frozen", False):
+        static_dir = os.path.join(sys._MEIPASS, "server", "static")
+    else:
+        static_dir = os.path.join(os.path.dirname(__file__), "static")
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
     @app.get("/")

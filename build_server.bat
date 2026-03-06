@@ -12,11 +12,17 @@ if errorlevel 1 (
     python -m pip install pyinstaller
 )
 
+:: 이전 빌드 정리
+if exist build rmdir /s /q build
+if exist dist rmdir /s /q dist
+
 :: GUI 서버 빌드 (메인)
 echo [1/3] lora_server.exe 빌드 중... (GUI)
 python -m PyInstaller --onefile --windowed --name lora_server ^
     --add-data "config.yaml;." ^
     --add-data "server/static;server/static" ^
+    --add-data "lora_config.py;." ^
+    --hidden-import lora_config ^
     --hidden-import uvicorn.logging ^
     --hidden-import uvicorn.protocols.http ^
     --hidden-import uvicorn.protocols.http.auto ^
@@ -27,6 +33,7 @@ python -m PyInstaller --onefile --windowed --name lora_server ^
     --hidden-import uvicorn.lifespan ^
     --hidden-import uvicorn.lifespan.on ^
     --hidden-import uvicorn.lifespan.off ^
+    --hidden-import uvicorn.protocols.websockets.websockets_impl ^
     server_gui.py
 
 if errorlevel 1 (
@@ -40,6 +47,8 @@ echo [2/3] lora_receiver_server.exe 빌드 중... (CLI)
 python -m PyInstaller --onefile --name lora_receiver_server ^
     --add-data "config.yaml;." ^
     --add-data "server/static;server/static" ^
+    --add-data "lora_config.py;." ^
+    --hidden-import lora_config ^
     --hidden-import uvicorn.logging ^
     --hidden-import uvicorn.protocols.http ^
     --hidden-import uvicorn.protocols.http.auto ^
@@ -50,6 +59,7 @@ python -m PyInstaller --onefile --name lora_receiver_server ^
     --hidden-import uvicorn.lifespan ^
     --hidden-import uvicorn.lifespan.on ^
     --hidden-import uvicorn.lifespan.off ^
+    --hidden-import uvicorn.protocols.websockets.websockets_impl ^
     receiver_server.py
 
 if errorlevel 1 (
@@ -62,6 +72,8 @@ if errorlevel 1 (
 echo [3/3] lora_auto_sender.exe 빌드 중...
 python -m PyInstaller --onefile --name lora_auto_sender ^
     --add-data "config.yaml;." ^
+    --add-data "lora_config.py;." ^
+    --hidden-import lora_config ^
     auto_sender.py
 
 if errorlevel 1 (
