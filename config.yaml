@@ -1,0 +1,37 @@
+# LoRa-hX 수신 서버 설정
+# ─────────────────────────────────────────────
+
+lora:
+  port: "COM4"              # LoRa 시리얼 포트
+  baud_rate: 115200
+  mode: "stream"            # stream | packet
+  # LoRa 파라미터 (configure: true 시 적용)
+  configure: false
+  spreading_factor: 7
+  bandwidth: 0              # 0=125K, 1=250K, 2=500K
+  power: 22
+  channel: 18
+  address: 0
+  net_id: 0
+
+database:
+  type: "sqlite"            # sqlite | mysql | postgresql
+  # SQLite
+  sqlite_path: "lora_data.db"
+  # MySQL / PostgreSQL (type 변경 시 사용)
+  host: "localhost"
+  port: 3306
+  name: "lora_hx"
+  user: "root"
+  password: ""
+
+web:
+  host: "0.0.0.0"
+  port: 8080
+
+auto_sender:
+  sensor_port: "COM3"      # 센서 장비 시리얼 포트
+  sensor_baud: 9600
+  lora_port: "COM4"        # LoRa 송신 시리얼 포트
+  lora_baud: 115200
+  interval: 1.0            # 중계 간격 (초)

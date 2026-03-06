@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoRa-hX Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <h1 class="header-title">LoRa-hX Dashboard</h1>
+        <div class="header-status">
+            <span id="ws-status" class="status-dot disconnected"></span>
+            <span id="ws-status-text">연결 중...</span>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 통계 카드 -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">총 메시지</div>
+                <div class="stat-value" id="stat-total">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">오늘 수신</div>
+                <div class="stat-value" id="stat-today">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">분당 수신률</div>
+                <div class="stat-value" id="stat-rate">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">최근 수신</div>
+                <div class="stat-value stat-value-sm" id="stat-last">-</div>
+            </div>
+        </section>
+
+        <!-- 차트 -->
+        <section class="chart-section">
+            <h2 class="section-title">시간별 수신 현황</h2>
+            <div id="hourly-chart" class="chart-container"></div>
+        </section>
+
+        <!-- 실시간 테이블 -->
+        <section class="table-section">
+            <div class="table-header">
+                <h2 class="section-title">실시간 수신 데이터</h2>
+                <button class="btn-refresh" onclick="loadMessages()">새로고침</button>
+            </div>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width:60px">#</th>
+                            <th style="width:170px">타임스탬프</th>
+                            <th style="width:80px">크기</th>
+                            <th>HEX 데이터</th>
+                            <th>디코딩 텍스트</th>
+                        </tr>
+                    </thead>
+                    <tbody id="message-tbody">
+                        <tr><td colspan="5" class="empty-row">데이터 로딩 중...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
