@@ -6,15 +6,15 @@ echo ============================================================
 echo.
 
 :: 의존성 확인
-pip show pyinstaller >nul 2>&1
+python -m pip show pyinstaller >nul 2>&1
 if errorlevel 1 (
     echo [INFO] PyInstaller 설치 중...
-    pip install pyinstaller
+    python -m pip install pyinstaller
 )
 
 :: GUI 서버 빌드 (메인)
 echo [1/3] lora_server.exe 빌드 중... (GUI)
-pyinstaller --onefile --windowed --name lora_server ^
+python -m PyInstaller --onefile --windowed --name lora_server ^
     --add-data "config.yaml;." ^
     --add-data "server/static;server/static" ^
     --hidden-import uvicorn.logging ^
@@ -37,7 +37,7 @@ if errorlevel 1 (
 
 :: CLI 수신 서버 빌드
 echo [2/3] lora_receiver_server.exe 빌드 중... (CLI)
-pyinstaller --onefile --name lora_receiver_server ^
+python -m PyInstaller --onefile --name lora_receiver_server ^
     --add-data "config.yaml;." ^
     --add-data "server/static;server/static" ^
     --hidden-import uvicorn.logging ^
@@ -60,7 +60,7 @@ if errorlevel 1 (
 
 :: 자동 송신기 빌드
 echo [3/3] lora_auto_sender.exe 빌드 중...
-pyinstaller --onefile --name lora_auto_sender ^
+python -m PyInstaller --onefile --name lora_auto_sender ^
     --add-data "config.yaml;." ^
     auto_sender.py
 
